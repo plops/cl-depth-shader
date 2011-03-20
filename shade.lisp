@@ -81,22 +81,18 @@
 
 (progn
   (defparameter *vertex-shader*
-    "varying vec3 DepthColor;
+    "varying float d;
 void main(){
-  //float z=length(gl_Vertex.xyz);
-  //z=pow(z,8.0);
-  //vec4 color=gl_FrontMaterial.diffuse * gl_Color;
-  //DepthColor=vec3(color*vec4((z-1.2)*.0002));
   gl_ClipVertex=gl_ModelViewMatrix*gl_Vertex;
   gl_Position=ftransform();
-  DepthColor=vec3(gl_Position);
+  d=(43-gl_Position.z)*.022;
 }
 ")
   (defparameter *fragment-shader*
-    "varying vec3 DepthColor;
+    "varying float d;
 void main()
 {
- gl_FragColor = vec4(vec3((43-DepthColor.z)*.022),1);
+ gl_FragColor = vec4(vec3(d),1);
 }
 ")
  (setf *reinitialize* t))

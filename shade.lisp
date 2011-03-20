@@ -83,19 +83,20 @@
   (defparameter *vertex-shader*
     "varying vec3 DepthColor;
 void main(){
-  float z=length(gl_Vertex.xyz);
-  z=pow(z,8.0);
-  vec4 color=gl_FrontMaterial.diffuse * gl_Color;
-  DepthColor=vec3(color*vec4((z-1.2)*.0002));
+  //float z=length(gl_Vertex.xyz);
+  //z=pow(z,8.0);
+  //vec4 color=gl_FrontMaterial.diffuse * gl_Color;
+  //DepthColor=vec3(color*vec4((z-1.2)*.0002));
   gl_ClipVertex=gl_ModelViewMatrix*gl_Vertex;
   gl_Position=ftransform();
+  DepthColor=vec3(gl_Position);
 }
 ")
   (defparameter *fragment-shader*
     "varying vec3 DepthColor;
 void main()
 {
- gl_FragColor = vec4(DepthColor,1);
+ gl_FragColor = vec4(vec3((43-DepthColor.z)*.022),1);
 }
 ")
  (setf *reinitialize* t))
@@ -137,8 +138,8 @@ void main()
   (defun my-init ()
     (matrix-mode :projection)
     (load-identity)
-    (glu:perspective 70 1s0 20 50)
-      (glu:look-at 20 30 -5
+    (glu:perspective 40 1s0 30 40)
+      (glu:look-at 20 30 20
 		   0 0 0
 		   0 0 1)
       (matrix-mode :modelview)
@@ -157,7 +158,7 @@ void main()
      (clear :color-buffer-bit :depth-buffer-bit)
      (with-pushed-matrix 
        (rotate angle 0 0 1)
-       
+       (rotate 90 1 0 0)
        (setf angle (if (< angle 360)
 	    (1+ angle)
 	    0))
